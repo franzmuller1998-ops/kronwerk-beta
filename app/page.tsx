@@ -7,9 +7,10 @@ export default function Home() {
       <div className="relative z-10 flex h-full flex-col items-center justify-center px-3 text-center">
         <h1 className="kw-underline font-display whitespace-nowrap text-[12.2vw] font-extrabold uppercase leading-[.9] tracking-[-.055em]">
           KRONWERK
-          {/* Hand-drawn underline: a gentle wave that curls into a small loop under the final K. */}
+          {/* Hand-drawn underline: a gentle wave that turns, under "RK", into the plan of a crownwork (кронверк):
+              half-bastion, curtain, central bastion, curtain, half-bastion, points facing away from the letters. */}
           <svg aria-hidden viewBox="0 0 1000 80" fill="none">
-            <path pathLength={1} d="M30 42 C220 34 470 50 700 40 C800 36 870 32 905 38 C950 46 955 66 925 66 C895 66 890 44 925 36 C950 30 975 30 990 34" />
+            <path pathLength={1} d="M30 42 C220 34 470 50 700 40 C760 37 790 40 812 40 L822 86 L806 110 L846 98 L868 98 L888 126 L908 98 L930 98 L970 110 L954 86 L964 40 L990 40" />
           </svg>
         </h1>
         <p data-cursor="lg" className="font-display -mt-[.15vw] text-[8.8vw] font-extralight leading-none tracking-[.02em]">music</p>
