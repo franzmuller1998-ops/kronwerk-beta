@@ -11,11 +11,15 @@ button,a { -webkit-tap-highlight-color:transparent; }
 .ul:hover::after { transform:scaleX(1); }
 /* Custom cursor (components/CustomCursor.tsx): only active on mouse devices, which get this class from JS. */
 .has-custom-cursor, .has-custom-cursor * { cursor:none!important; }
-.kw-cursor { position:fixed; left:0; top:0; z-index:100; pointer-events:none; opacity:0; mix-blend-mode:difference; transition:opacity .2s; will-change:transform; }
+.kw-cursor { position:fixed; left:0; top:0; z-index:100; pointer-events:none; opacity:0; transition:opacity .2s; will-change:transform; }
 .kw-cursor.is-visible { opacity:1; }
-.kw-cursor span { display:block; width:14px; height:14px; margin:-7px 0 0 -7px; border-radius:50%; background:#fff; transition:transform .3s cubic-bezier(.22,1,.36,1); }
+/* Plain white: a difference blend tints it greenish over the dark purple/blue parts of the flow.
+   The hairline keeps it visible over white text. */
+.kw-cursor span { display:block; width:14px; height:14px; margin:-7px 0 0 -7px; border-radius:50%; background:#fff; box-shadow:0 0 0 1px rgba(5,6,8,.25); transition:transform .3s cubic-bezier(.22,1,.36,1); }
 .kw-cursor.is-hover span { transform:scale(1.6); }
-.kw-cursor.is-big span { transform:scale(5); transition-duration:.45s; }
+/* Over display type the blend is needed so the letters under the 70px circle invert instead of disappearing. */
+.kw-cursor.is-big { mix-blend-mode:difference; }
+.kw-cursor.is-big span { transform:scale(5); box-shadow:none; transition-duration:.45s; }
 @keyframes wave { 0%,100% { transform:scaleY(.25); } 50% { transform:scaleY(1); } }
 @media (prefers-reduced-motion:reduce) {
   html { scroll-behavior:auto; }
