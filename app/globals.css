@@ -16,6 +16,17 @@ button,a { -webkit-tap-highlight-color:transparent; }
 .kw-cursor span { display:block; width:14px; height:14px; margin:-7px 0 0 -7px; border-radius:50%; background:#fff; transition:transform .3s cubic-bezier(.22,1,.36,1); }
 .kw-cursor.is-hover span { transform:scale(1.6); }
 .kw-cursor.is-big span { transform:scale(5); transition-duration:.45s; }
+/* Hairline underline for the home title: flow palette fading out at both ends, drawn from the centre once the
+   page has resolved, with a soft glint travelling along it now and then. em-based, so it scales with the
+   vw-sized type. With reduced motion the line is static and the glint (opacity 0 at rest) never shows. */
+.kw-underline { position:relative; }
+.kw-underline::after, .kw-underline::before { content:''; position:absolute; left:3%; right:3%; bottom:.01em; height:max(1.5px,.016em); border-radius:1em; pointer-events:none; }
+.kw-underline::after { background:linear-gradient(90deg,transparent,#1d4dff 14%,#8a3cff 38%,#ff3cc8 62%,#ff8a1f 86%,transparent);
+  animation:kw-underline-draw 1.1s cubic-bezier(.65,0,.35,1) .5s both; }
+.kw-underline::before { z-index:1; opacity:0; background:linear-gradient(90deg,transparent 42%,rgba(255,255,255,.95) 50%,transparent 58%);
+  background-size:300% 100%; animation:kw-underline-glint 7s cubic-bezier(.45,0,.55,1) 2s infinite; }
+@keyframes kw-underline-draw { from { transform:scaleX(0); opacity:0; } to { transform:scaleX(1); opacity:1; } }
+@keyframes kw-underline-glint { 0% { opacity:0; background-position:100% 0; } 8% { opacity:1; } 30% { opacity:1; } 38%,100% { opacity:0; background-position:0% 0; } }
 @keyframes wave { 0%,100% { transform:scaleY(.25); } 50% { transform:scaleY(1); } }
 @media (prefers-reduced-motion:reduce) {
   html { scroll-behavior:auto; }
