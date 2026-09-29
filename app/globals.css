@@ -16,9 +16,6 @@ button,a { -webkit-tap-highlight-color:transparent; }
 .kw-cursor span { display:block; width:14px; height:14px; margin:-7px 0 0 -7px; border-radius:50%; background:#fff; transition:transform .3s cubic-bezier(.22,1,.36,1); }
 .kw-cursor.is-hover span { transform:scale(1.6); }
 .kw-cursor.is-big span { transform:scale(5); transition-duration:.45s; }
-/* Lifts display type off a bright COLOR FLOW without a dark area behind it: the shadow follows the letterforms
-   (em-based, so it scales with vw-sized type) — a crisp edge plus a soft halo hugging each glyph. */
-.title-lift { text-shadow: 0 .01em .02em rgba(5,6,8,.35), 0 0 .08em rgba(5,6,8,.4), 0 .03em .35em rgba(5,6,8,.35); }
 @keyframes wave { 0%,100% { transform:scaleY(.25); } 50% { transform:scaleY(1); } }
 @media (prefers-reduced-motion:reduce) {
   html { scroll-behavior:auto; }
