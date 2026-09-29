@@ -38,9 +38,12 @@ void main(){
   float f=fbm(p+3.*r);
   float rib=pow(1.-abs(f*2.-1.),3.5);
   vec3 col=pal(f*1.4+q.x*.6+r.y*.4+T*.04);
-  float v=smoothstep(.12*K,.8*K,length(uv*vec2(.75,1.15)));  // dark centre keeps logo legible; K scales its size
+  // Centre zone behind page titles. K = how much it darkens the colour (1 = fully dark centre, 0 = none).
+  // The white-hot cores are always calmed there: they, not the colour, are what fights with type.
+  float cz=1.-smoothstep(.12,.8,length(uv*vec2(.75,1.15)));
+  float v=1.-cz*K;
   vec3 o=col*(rib*1.5+.12*f)*v*I;
-  o+=vec3(1.,.92,.85)*pow(rib,9.)*.55*v*I;                    // white-hot filament cores
+  o+=vec3(1.,.92,.85)*pow(rib,9.)*.55*(1.-cz*max(K,.85))*I;  // white-hot filament cores
   o+=(h(gl_FragCoord.xy+T)-.5)*.035;                          // fine grain
   gl_FragColor=vec4(max(o,vec3(.02,.024,.03)),1.);}`
 
