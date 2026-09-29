@@ -26,7 +26,7 @@ precision highp float;
 #else
 precision mediump float;
 #endif
-uniform vec2 R,M;uniform float T,I;uniform vec3 C[4];
+uniform vec2 R,M,V;uniform float T,I,A;uniform vec3 C[4];
 float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
 float n(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);
 return mix(mix(h(i),h(i+vec2(1,0)),f.x),mix(h(i+vec2(0,1)),h(i+vec2(1,1)),f.x),f.y);}
@@ -36,19 +36,23 @@ c=mix(c,C[2],smoothstep(0.,1.,clamp(x-1.,0.,1.)));c=mix(c,C[3],smoothstep(0.,1.,
 return mix(c,C[0],smoothstep(0.,1.,clamp(x-3.,0.,1.)));}
 void main(){
   vec2 uv=(gl_FragCoord.xy-.5*R)/R.y; vec2 m=(M-.5)*vec2(R.x/R.y,1.);
-  vec2 d=uv-m; vec2 p=uv*1.25+.10*d*exp(-dot(d,d)*4.);        // subtle local warp around cursor
+  // Cursor response: geometry only, never brightness, so it reads as the flow bending rather than a spotlight.
+  vec2 d=uv-m; float w=exp(-dot(d,d)*3.5)*A;                  // wide soft falloff, no visible edge
+  float a=.22*w; vec2 p=(m+mat2(cos(a),-sin(a),sin(a),cos(a))*d)*1.25; // gentle swirl around the cursor
+  p-=V*w*.12;                                                 // nearby flow is dragged along the motion
+  p+=(vec2(n(uv*5.+T),n(uv*5.-T+4.))-.5)*.07*w;               // soft distortion
   vec2 q=vec2(fbm(p+T*.55),fbm(p+vec2(5.2,1.3)-T*.45));
   vec2 r=vec2(fbm(p+3.*q+vec2(1.7,9.2)+T*.35),fbm(p+3.*q+vec2(8.3,2.8)-T*.3));
   float f=fbm(p+3.*r);
   float rib=pow(1.-abs(f*2.-1.),3.5);
-  vec3 col=pal(f*1.4+q.x*.6+r.y*.4+T*.04);
+  vec3 col=pal(f*1.4+q.x*.6+r.y*.4+T*.04+dot(uv,m)*.18*A+dot(d,V)*.25*w); // gradient tilts toward the cursor
   float v=smoothstep(.12,.8,length(uv*vec2(.75,1.15)));      // dark centre keeps logo legible
   vec3 o=col*(rib*1.5+.12*f)*v*I;
   o+=vec3(1.,.92,.85)*pow(rib,9.)*.55*v*I;                    // white-hot filament cores
   o+=(h(gl_FragCoord.xy+T)-.5)*.035;                          // fine grain
   gl_FragColor=vec4(max(o,vec3(.02,.024,.03)),1.);}`
 
-export default function ColorFlow({ variant = 'page', palette = 'hero', colors, speed = 0.3, intensity = 1, interactive = false, className = '' }: Props) {
+export default function ColorFlow({ variant = 'page', palette = 'hero', colors, speed = 0.3, intensity = 1, interactive = true, className = '' }: Props) {
   const ref = useRef<HTMLDivElement>(null)
   const c = four(colors ?? PALETTES[palette]).map(hex)
   const cfg = useRef({ colors: c, speed, intensity })
@@ -75,16 +79,17 @@ export default function ColorFlow({ variant = 'page', palette = 'hero', colors, 
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW)
     const loc = gl.getAttribLocation(pr, 'p'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0)
     const U = (n: string) => gl.getUniformLocation(pr, n)
-    const [uR, uM, uT, uI, uC] = [U('R'), U('M'), U('T'), U('I'), U('C')]
+    const [uR, uM, uV, uA, uT, uI, uC] = [U('R'), U('M'), U('V'), U('A'), U('T'), U('I'), U('C')]
 
     const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches
     const coarse = matchMedia('(pointer: coarse)').matches
     const scale = coarse ? 0.45 : 0.6 // low-res render + CSS upscale = free soft blur, cheap on GPU
 
-    const cur = cfg.current.colors.flatMap(rgb), mouse = [0.5, 0.5], tgt = [0.5, 0.5]
-    let t = Math.random() * 50
+    const cur = cfg.current.colors.flatMap(rgb), mouse = [0.5, 0.5], tgt = [0.5, 0.5], vel = [0, 0]
+    let t = Math.random() * 50, act = 0, lastMove = -1e9
     const draw = () => {
       gl.uniform2f(uR, cv.width, cv.height); gl.uniform2f(uM, mouse[0], mouse[1])
+      gl.uniform2f(uV, vel[0], vel[1]); gl.uniform1f(uA, act)
       gl.uniform1f(uT, t); gl.uniform1f(uI, cfg.current.intensity); gl.uniform3fv(uC, cur)
       gl.drawArrays(gl.TRIANGLES, 0, 3)
       cv.style.opacity = ''
@@ -101,7 +106,12 @@ export default function ColorFlow({ variant = 'page', palette = 'hero', colors, 
     resize()
     const ro = new ResizeObserver(resize); ro.observe(cv)
 
-    const move = (e: PointerEvent) => { const b = cv.getBoundingClientRect(); tgt[0] = (e.clientX - b.left) / b.width; tgt[1] = 1 - (e.clientY - b.top) / b.height }
+    const move = (e: PointerEvent) => {
+      if (e.pointerType !== 'mouse') return
+      const b = cv.getBoundingClientRect(); tgt[0] = (e.clientX - b.left) / b.width; tgt[1] = 1 - (e.clientY - b.top) / b.height
+      if (lastMove < 0) { mouse[0] = tgt[0]; mouse[1] = tgt[1] } // first contact: no sweep in from the centre
+      lastMove = performance.now()
+    }
     if (interactive && !coarse && !reduced) addEventListener('pointermove', move)
 
     let raf = 0, visible = true, last = performance.now()
@@ -110,10 +120,19 @@ export default function ColorFlow({ variant = 'page', palette = 'hero', colors, 
     const frame = (now: number) => {
       raf = requestAnimationFrame(frame)
       if (!visible || document.hidden) { last = now; return }
-      t += ((now - last) / 1000) * cfg.current.speed; last = now
+      const dt = Math.min(0.1, Math.max(0.001, (now - last) / 1000)); last = now
+      t += dt * cfg.current.speed
       const goal = cfg.current.colors.flatMap(rgb)
       for (let i = 0; i < 12; i++) cur[i] += (goal[i] - cur[i]) * 0.04
-      mouse[0] += (tgt[0] - mouse[0]) * 0.04; mouse[1] += (tgt[1] - mouse[1]) * 0.04
+      // Frame-rate independent easing: the flow trails the cursor lazily instead of following it.
+      const k = 1 - Math.exp(-dt * 2.5), px = mouse[0], py = mouse[1]
+      mouse[0] += (tgt[0] - mouse[0]) * k; mouse[1] += (tgt[1] - mouse[1]) * k
+      const aspect = cv.width / cv.height, kv = 1 - Math.exp(-dt * 5)
+      vel[0] += (((mouse[0] - px) / dt) * aspect - vel[0]) * kv; vel[1] += ((mouse[1] - py) / dt - vel[1]) * kv
+      const speedLen = Math.hypot(vel[0], vel[1]); if (speedLen > 1.2) { vel[0] *= 1.2 / speedLen; vel[1] *= 1.2 / speedLen }
+      // Influence fades in on movement and relaxes (but doesn't vanish) when the mouse rests.
+      const goalAct = lastMove < 0 ? 0 : now - lastMove < 1200 ? 1 : 0.45
+      act += (goalAct - act) * (1 - Math.exp(-dt * 1.5))
       draw()
     }
     if (!reduced) raf = requestAnimationFrame(frame)
