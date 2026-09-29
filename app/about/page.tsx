@@ -4,7 +4,7 @@ export default function About() {
   return (
     <main className="relative flex min-h-screen flex-col justify-between px-6 pb-10 pt-32 md:px-10">
       <ColorFlow palette="about" intensity={0.8} speed={0.22} className="fixed inset-0 -z-10" />
-      <h1 className="font-display text-[7.4vw] font-normal uppercase leading-[1.08] tracking-tight md:text-[4.6vw]">
+      <h1 className="font-display w-fit text-[7.4vw] font-normal uppercase leading-[1.08] tracking-tight md:text-[4.6vw]">
         KRONWERK<br />is an independent<br />music label<br />focused on<br />
         <span style={g('#2f6bff', '#9b4dff')}>electronic music,</span><br />
         <span style={g('#9b4dff', '#ff7a1a')}>experimentation</span><br />and <span style={{ color: '#ff8a1f' }}>sound.</span>

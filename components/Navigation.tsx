@@ -52,7 +52,7 @@ export default function Navigation() {
                 {links.map(([l, h, c], i) => (
                   <li key={h} onMouseEnter={() => setHover(c)} onMouseLeave={() => setHover(null)}>
                     <Link href={h} onClick={() => setOpen(false)} className="font-display group flex items-baseline gap-[3vw] text-[10vw] leading-[1.05] tracking-tight md:text-[7vw]" style={{ ['--c' as string]: c }}>
-                      <span className="text-[.35em] font-light text-white/50">0{i + 1}</span><span className="transition-colors duration-500 group-hover:text-[var(--c)]">{l.toUpperCase()}</span>
+                      <span className="text-[.35em] font-light text-white/50">0{i + 1}</span><span data-cursor="lg" className="transition-colors duration-500 group-hover:text-[var(--c)]">{l.toUpperCase()}</span>
                     </Link>
                   </li>
                 ))}

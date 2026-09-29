@@ -25,7 +25,7 @@ export default async function ReleaseDetail({ params }: { params: Promise<{id:st
         <Artwork colors={release.colors} className="aspect-square w-full" />
         <div className="lg:sticky lg:top-28">
           <p className="mb-4 flex gap-4 text-xs tracking-[.2em] text-white/45"><span>{release.id}</span><span>{release.year}</span></p>
-          <h1 className="font-display text-[15vw] font-semibold leading-[.88] tracking-[-.045em] md:text-[8vw] lg:text-[6.2vw]">{release.artist}</h1>
+          <h1 className="font-display w-fit text-[15vw] font-semibold leading-[.88] tracking-[-.045em] md:text-[8vw] lg:text-[6.2vw]">{release.artist}</h1>
           <p className="font-display mt-3 text-2xl font-light tracking-[-.01em] text-white/75 md:text-3xl">{release.title}</p>
           <p className="mb-10 mt-6 max-w-md text-sm leading-relaxed text-white/50">{release.description}</p>
           <AudioPlayer tracks={release.tracks} />

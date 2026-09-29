@@ -19,7 +19,7 @@ export default async function ArtistDetail({params}:{params:Promise<{name:string
       <div className="grid gap-10 lg:grid-cols-[.8fr_1.2fr] lg:gap-20">
         <section>
           <p className="mb-4 text-xs uppercase tracking-[.25em] text-white/45">Artist</p>
-          <h1 className="font-display text-[17vw] leading-[.88] tracking-[-.04em] md:text-[9vw]">{artist.name}</h1>
+          <h1 className="font-display w-fit text-[17vw] leading-[.88] tracking-[-.04em] md:text-[9vw]">{artist.name}</h1>
           <p className="mt-5 text-sm text-white/55">Electronic producer based in {artist.location}.</p>
           <p className="mt-8 max-w-md text-sm leading-relaxed text-white/70">{artist.bio}</p>
           <div className="mt-8 flex gap-5 text-xs text-white/55"><span>Instagram</span><span>SoundCloud</span><span>Bandcamp</span></div>

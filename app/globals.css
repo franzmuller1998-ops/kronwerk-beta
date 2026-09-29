@@ -15,6 +15,7 @@ button,a { -webkit-tap-highlight-color:transparent; }
 .kw-cursor.is-visible { opacity:1; }
 .kw-cursor span { display:block; width:14px; height:14px; margin:-7px 0 0 -7px; border-radius:50%; background:#fff; transition:transform .3s cubic-bezier(.22,1,.36,1); }
 .kw-cursor.is-hover span { transform:scale(1.6); }
+.kw-cursor.is-big span { transform:scale(5); transition-duration:.45s; }
 @keyframes wave { 0%,100% { transform:scaleY(.25); } 50% { transform:scaleY(1); } }
 @media (prefers-reduced-motion:reduce) {
   html { scroll-behavior:auto; }

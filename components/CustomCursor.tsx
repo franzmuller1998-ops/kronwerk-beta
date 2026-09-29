@@ -2,10 +2,13 @@
 import { useEffect, useRef, useState } from 'react'
 
 const INTERACTIVE = 'a,button,[role="button"],input,select,textarea,label,summary'
+// Large display type: every h1, plus other big text opted in with data-cursor="lg".
+const DISPLAY = 'h1,[data-cursor="lg"]'
 
 /**
- * Minimal white dot that replaces the system cursor on mouse devices and grows slightly over
- * interactive elements. It follows the pointer 1:1 (no easing lag) and never touches the backgrounds.
+ * Minimal white dot that replaces the system cursor on mouse devices. It grows slightly over interactive
+ * elements and a lot over large display type, where mix-blend-difference inverts the letters under it.
+ * It follows the pointer 1:1 (no easing lag) and never touches the backgrounds.
  */
 export default function CustomCursor() {
   const dot = useRef<HTMLDivElement>(null)
@@ -26,7 +29,12 @@ export default function CustomCursor() {
       if (!raf) raf = requestAnimationFrame(paint) // at most one style write per frame
     }
     // Delegated, so links and buttons rendered later (menu, other routes) work too.
-    const over = (e: PointerEvent) => el.classList.toggle('is-hover', e.target instanceof Element && !!e.target.closest(INTERACTIVE))
+    const over = (e: PointerEvent) => {
+      const t = e.target instanceof Element ? e.target : null
+      const big = !!t?.closest(DISPLAY) // wins over the link state, e.g. artist names in the list
+      el.classList.toggle('is-big', big)
+      el.classList.toggle('is-hover', !big && !!t?.closest(INTERACTIVE))
+    }
     const leave = () => el.classList.remove('is-visible')
     addEventListener('pointermove', move, { passive: true })
     document.addEventListener('pointerover', over)
