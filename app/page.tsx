@@ -5,7 +5,13 @@ export default function Home() {
     <section className="relative h-[100svh] min-h-[560px] overflow-hidden">
       <ColorFlow variant="hero" palette="hero" speed={0.28} intensity={1.08} vignette={1.2} className="absolute inset-0" />
       <div className="relative z-10 flex h-full flex-col items-center justify-center px-3 text-center">
-        <h1 className="kw-underline font-display whitespace-nowrap text-[12.2vw] font-extrabold uppercase leading-[.9] tracking-[-.055em]">KRONWERK</h1>
+        <h1 className="kw-underline font-display whitespace-nowrap text-[12.2vw] font-extrabold uppercase leading-[.9] tracking-[-.055em]">
+          KRONWERK
+          {/* Hand-drawn underline: a gentle wave that curls into a small loop under the final K. */}
+          <svg aria-hidden viewBox="0 0 1000 80" fill="none">
+            <path pathLength={1} d="M30 42 C220 34 470 50 700 40 C800 36 870 32 905 38 C950 46 955 66 925 66 C895 66 890 44 925 36 C950 30 975 30 990 34" />
+          </svg>
+        </h1>
         <p data-cursor="lg" className="font-display -mt-[.15vw] text-[8.8vw] font-extralight leading-none tracking-[.02em]">music</p>
       </div>
       <div className="absolute inset-x-0 bottom-0 z-10 flex items-end justify-between px-6 pb-8 text-[12px] leading-[1.5] md:px-10 md:pb-9">
