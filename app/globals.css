@@ -16,14 +16,6 @@ button,a { -webkit-tap-highlight-color:transparent; }
 .kw-cursor span { display:block; width:14px; height:14px; margin:-7px 0 0 -7px; border-radius:50%; background:#fff; transition:transform .3s cubic-bezier(.22,1,.36,1); }
 .kw-cursor.is-hover span { transform:scale(1.6); }
 .kw-cursor.is-big span { transform:scale(5); transition-duration:.45s; }
-/* Highlighter stroke behind the home title: the palette of the flow, rough felt-tip edges (SVG filter in
-   app/page.tsx), slight tilt, drawn left to right once the page has resolved. With reduced motion the
-   animation is removed globally and the stroke simply shows in its final state. */
-.kw-marker { position:absolute; left:-3%; right:-3%; bottom:.02em; height:.42em; border-radius:.08em;
-  background:linear-gradient(90deg,#1d4dff,#8a3cff 35%,#ff3cc8 68%,#ff8a1f); opacity:.9;
-  filter:url(#kw-marker-edge); transform-origin:left center; transform:rotate(-1.2deg);
-  animation:kw-marker-draw .9s cubic-bezier(.65,0,.35,1) .45s both; }
-@keyframes kw-marker-draw { from { transform:rotate(-1.2deg) scaleX(0); } to { transform:rotate(-1.2deg) scaleX(1); } }
 @keyframes wave { 0%,100% { transform:scaleY(.25); } 50% { transform:scaleY(1); } }
 @media (prefers-reduced-motion:reduce) {
   html { scroll-behavior:auto; }
