@@ -18,7 +18,7 @@ precision highp float;
 #else
 precision mediump float;
 #endif
-uniform vec2 R;uniform float T,I;uniform vec3 C[4];uniform sampler2D N;
+uniform vec2 R;uniform float T,I,K,S;uniform vec3 C[4];uniform sampler2D N;
 // Grain only: sin-free hash (Dave Hoskins) on wrapped coordinates.
 float h(vec2 p){p=mod(p,97.);vec3 p3=fract(vec3(p.xyx)*.1031);p3+=dot(p3,p3.yzx+33.33);return fract((p3.x+p3.y)*p3.z);}
 // Value noise from a 256x256 random texture: the GPU's bilinear filter interpolates the lattice (after the
@@ -38,9 +38,13 @@ void main(){
   float f=fbm(p+3.*r);
   float rib=pow(1.-abs(f*2.-1.),3.5);
   vec3 col=pal(f*1.4+q.x*.6+r.y*.4+T*.04);
-  float v=smoothstep(.12,.8,length(uv*vec2(.75,1.15)));      // dark centre keeps logo legible
-  vec3 o=col*(rib*1.5+.12*f)*v*I;
-  o+=vec3(1.,.92,.85)*pow(rib,9.)*.55*v*I;                    // white-hot filament cores
+  // Centre zone behind page titles. K: how much it darkens (1 = the dark centre that keeps titles legible).
+  // S: how much it calms: sharp ribbons and white-hot cores fade into a smooth colour field, so white type
+  // stays legible without darkening. K=1, S=0 is the original look.
+  float cz=1.-smoothstep(.12,.8,length(uv*vec2(.75,1.15)));
+  float v=1.-cz*K, calm=cz*S;
+  vec3 o=col*mix(rib*1.5+.12*f,.5+.3*f,calm)*v*I;
+  o+=vec3(1.,.92,.85)*pow(rib,9.)*.55*v*(1.-calm)*I;         // white-hot filament cores
   o+=(h(gl_FragCoord.xy+T)-.5)*.035;                          // fine grain
   gl_FragColor=vec4(max(o,vec3(.02,.024,.03)),1.);}`
 
@@ -52,9 +56,9 @@ const TIERS: Tier[] = [
 ]
 const OFF_KEY = 'kw-flow-off'
 
-export type FlowParams = { rgb: number[]; speed: number; intensity: number }
+export type FlowParams = { rgb: number[]; speed: number; intensity: number; vignette: number; calm: number }
 export type FlowOptions = { canvas: HTMLCanvasElement; params: () => FlowParams; fps?: number; onDisable: () => void }
-type Program = { prog: WebGLProgram; R: WebGLUniformLocation | null; T: WebGLUniformLocation | null; I: WebGLUniformLocation | null; C: WebGLUniformLocation | null }
+type Program = { prog: WebGLProgram; R: WebGLUniformLocation | null; T: WebGLUniformLocation | null; I: WebGLUniformLocation | null; K: WebGLUniformLocation | null; S: WebGLUniformLocation | null; C: WebGLUniformLocation | null }
 type Entry = FlowOptions & { ctx: CanvasRenderingContext2D; cur: number[]; t: number; last: number; visible: boolean; drawn: boolean; io: IntersectionObserver; ro: ResizeObserver }
 
 let gl: WebGLRenderingContext | null = null
@@ -124,7 +128,7 @@ function program(octaves: number): Program | null {
   g.attachShader(prog, sh(g.VERTEX_SHADER, VS)); g.attachShader(prog, sh(g.FRAGMENT_SHADER, fs(octaves)))
   g.bindAttribLocation(prog, 0, 'p'); g.linkProgram(prog)
   const ok = g.getProgramParameter(prog, g.LINK_STATUS)
-  const p = ok ? { prog, R: g.getUniformLocation(prog, 'R'), T: g.getUniformLocation(prog, 'T'), I: g.getUniformLocation(prog, 'I'), C: g.getUniformLocation(prog, 'C') } : null
+  const p = ok ? { prog, R: g.getUniformLocation(prog, 'R'), T: g.getUniformLocation(prog, 'T'), I: g.getUniformLocation(prog, 'I'), K: g.getUniformLocation(prog, 'K'), S: g.getUniformLocation(prog, 'S'), C: g.getUniformLocation(prog, 'C') } : null
   programs.set(octaves, p)
   if (!p) disable()
   return p
@@ -157,7 +161,7 @@ function sample(interval: number, now: number) {
 function render(e: Entry, dt: number) {
   const g = gl!, p = program(TIERS[tier].octaves)
   if (!p) return
-  const { rgb, speed, intensity } = e.params()
+  const { rgb, speed, intensity, vignette, calm } = e.params()
   e.t += dt * speed
   const k = 1 - Math.exp(-dt * 2.5) // colour cross-fade when a palette changes
   for (let i = 0; i < 12; i++) e.cur[i] += (rgb[i] - e.cur[i]) * k
@@ -165,7 +169,7 @@ function render(e: Entry, dt: number) {
   if (gc.width < w || gc.height < h) { gc.width = Math.max(gc.width, w); gc.height = Math.max(gc.height, h) }
   g.viewport(0, 0, w, h)
   g.useProgram(p.prog)
-  g.uniform2f(p.R, w, h); g.uniform1f(p.T, e.t); g.uniform1f(p.I, intensity); g.uniform3fv(p.C, e.cur)
+  g.uniform2f(p.R, w, h); g.uniform1f(p.T, e.t); g.uniform1f(p.I, intensity); g.uniform1f(p.K, vignette); g.uniform1f(p.S, calm); g.uniform3fv(p.C, e.cur)
   g.drawArrays(g.TRIANGLES, 0, 3)
   // GL's viewport sits at the bottom-left of the shared canvas.
   e.ctx.drawImage(gc, 0, gc.height - h, w, h, 0, 0, w, h)

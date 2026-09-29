@@ -9,7 +9,7 @@ export const PALETTES = {
   about: ['#1d4dff', '#00d5ff', '#ff8a1f', '#7a3cff'],
   contact: ['#7a3cff', '#ff3cc8', '#ff8a1f', '#1d4dff'],
 }
-type Props = { variant?: 'hero' | 'page'; palette?: keyof typeof PALETTES; colors?: string[]; speed?: number; intensity?: number; fps?: number; className?: string }
+type Props = { variant?: 'hero' | 'page'; palette?: keyof typeof PALETTES; colors?: string[]; speed?: number; intensity?: number; vignette?: number; calm?: number; fps?: number; className?: string }
 
 // Normalises #rgb / #rrggbb(aa); anything else falls back to the page background instead of NaN uniforms.
 const hex = (h: string) => {
@@ -25,11 +25,13 @@ const four = (c: string[]) => [0, 1, 2, 3].map((i) => (c.length ? c[i % c.length
  * Animated colour field. Drawn by the shared renderer (lib/flowRenderer.ts); the CSS gradient on the
  * wrapper is what shows with prefers-reduced-motion, on weak/software-GL devices, and before the first frame.
  */
-export default function ColorFlow({ variant = 'page', palette = 'hero', colors, speed = 0.3, intensity = 1, fps, className = '' }: Props) {
+export default function ColorFlow({ variant = 'page', palette = 'hero', colors, speed = 0.3, intensity = 1, vignette = 1, calm = 0, fps, className = '' }: Props) {
   const ref = useRef<HTMLDivElement>(null)
   const c = four(colors ?? PALETTES[palette]).map(hex)
-  const params = useRef({ rgb: c.flatMap(rgb), speed, intensity })
-  params.current = { rgb: c.flatMap(rgb), speed, intensity }
+  // vignette: how dark the centre behind titles is (1 = default dark centre, 0 = none).
+  // calm: how much the flow smooths out there instead (0 = none, 1 = soft colour field).
+  const params = useRef({ rgb: c.flatMap(rgb), speed, intensity, vignette, calm })
+  params.current = { rgb: c.flatMap(rgb), speed, intensity, vignette, calm }
 
   useEffect(() => {
     const cv = document.createElement('canvas')
