@@ -1,46 +1,45 @@
 'use client'
 import { useEffect, useRef, useState } from 'react'
 
+const INTERACTIVE = 'a,button,[role="button"],input,select,textarea,label,summary'
+
+/**
+ * Minimal white dot that replaces the system cursor on mouse devices and grows slightly over
+ * interactive elements. It follows the pointer 1:1 (no easing lag) and never touches the backgrounds.
+ */
 export default function CustomCursor() {
   const dot = useRef<HTMLDivElement>(null)
-  const ring = useRef<HTMLDivElement>(null)
-  // Mouse-like pointers only: on touch screens the dot used to sit stuck in the top-left corner.
   const [enabled, setEnabled] = useState(false)
   useEffect(() => { setEnabled(matchMedia('(hover: hover) and (pointer: fine)').matches) }, [])
 
   useEffect(() => {
-    if (!enabled) return
-    let x=0,y=0,rx=0,ry=0,raf=0,seen=false
-    const show=(v:boolean)=>{ for (const el of [dot.current, ring.current]) if (el) el.style.opacity = v ? '1' : '0' }
-    const move=(e:PointerEvent)=>{
-      x=e.clientX;y=e.clientY
-      if(!seen){ rx=x; ry=y; seen=true }
-      show(true)
+    const el = dot.current
+    if (!enabled || !el) return
+    const root = document.documentElement
+    root.classList.add('has-custom-cursor')
+    let x = 0, y = 0, raf = 0
+    const paint = () => { raf = 0; el.style.transform = `translate3d(${x}px,${y}px,0)` }
+    const move = (e: PointerEvent) => {
+      if (e.pointerType !== 'mouse') return
+      x = e.clientX; y = e.clientY
+      el.classList.add('is-visible')
+      if (!raf) raf = requestAnimationFrame(paint) // at most one style write per frame
     }
-    const loop=()=>{
-      rx += (x-rx)*.18; ry += (y-ry)*.18
-      if(dot.current) dot.current.style.transform=`translate3d(${x}px,${y}px,0)`
-      if(ring.current) ring.current.style.transform=`translate3d(${rx}px,${ry}px,0)`
-      raf=requestAnimationFrame(loop)
-    }
-    // Delegated, so links and buttons rendered after mount (menu, other routes) enlarge the ring too.
-    const over=(e:PointerEvent)=>ring.current?.classList.toggle('cursor-large', e.target instanceof Element && !!e.target.closest('a,button'))
-    const leave=()=>show(false)
-    addEventListener('pointermove',move)
-    document.addEventListener('pointerover',over)
-    document.documentElement.addEventListener('pointerleave',leave)
-    raf=requestAnimationFrame(loop)
-    return()=>{
-      removeEventListener('pointermove',move)
-      document.removeEventListener('pointerover',over)
-      document.documentElement.removeEventListener('pointerleave',leave)
+    // Delegated, so links and buttons rendered later (menu, other routes) work too.
+    const over = (e: PointerEvent) => el.classList.toggle('is-hover', e.target instanceof Element && !!e.target.closest(INTERACTIVE))
+    const leave = () => el.classList.remove('is-visible')
+    addEventListener('pointermove', move, { passive: true })
+    document.addEventListener('pointerover', over)
+    root.addEventListener('pointerleave', leave)
+    return () => {
+      root.classList.remove('has-custom-cursor')
+      removeEventListener('pointermove', move)
+      document.removeEventListener('pointerover', over)
+      root.removeEventListener('pointerleave', leave)
       cancelAnimationFrame(raf)
     }
-  },[enabled])
+  }, [enabled])
 
   if (!enabled) return null
-  return <>
-    <div ref={dot} style={{opacity:0}} className="pointer-events-none fixed left-0 top-0 z-[100] h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white mix-blend-difference" />
-    <div ref={ring} style={{opacity:0}} className="cursor-ring pointer-events-none fixed left-0 top-0 z-[99] h-8 w-8 -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/60 mix-blend-difference transition-[width,height] duration-300" />
-  </>
+  return <div ref={dot} aria-hidden className="kw-cursor"><span /></div>
 }

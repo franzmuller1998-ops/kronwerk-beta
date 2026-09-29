@@ -2,7 +2,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import ColorFlow from './ColorFlow'
 import CustomCursor from './CustomCursor'
 
@@ -15,6 +15,7 @@ export default function Navigation() {
   const [open, setOpen] = useState(false)
   const [hover, setHover] = useState<string | null>(null)
   const pathname = usePathname()
+  const reduceMotion = useReducedMotion()
 
   // Close on any route change (logo link, browser back/forward), not only on menu item clicks.
   useEffect(() => { setOpen(false) }, [pathname])
@@ -43,8 +44,8 @@ export default function Navigation() {
       </header>
       <AnimatePresence>
         {open && (
-          <motion.div id="site-menu" role="dialog" aria-modal="true" aria-label="Menu" className="fixed inset-0 z-50 bg-[#050608]" initial={{ clipPath: 'inset(0 0 100% 0)' }} animate={{ clipPath: 'inset(0 0 0% 0)' }} exit={{ clipPath: 'inset(0 0 100% 0)' }} transition={{ duration: 0.75, ease: [0.76, 0, 0.24, 1] }}>
-            <ColorFlow palette="hero" colors={hover ? [hover, hover, '#7a3cff', '#00d5ff'] : undefined} interactive className="absolute inset-0 opacity-80" />
+          <motion.div id="site-menu" role="dialog" aria-modal="true" aria-label="Menu" className="fixed inset-0 z-50 bg-[#050608]" initial={{ clipPath: 'inset(0 0 100% 0)' }} animate={{ clipPath: 'inset(0 0 0% 0)' }} exit={{ clipPath: 'inset(0 0 100% 0)' }} transition={{ duration: reduceMotion ? 0 : 0.5, ease: [0.76, 0, 0.24, 1] }}>
+            <ColorFlow palette="hero" colors={hover ? [hover, hover, '#7a3cff', '#00d5ff'] : undefined} className="absolute inset-0 opacity-80" />
             <div className="relative flex h-full flex-col justify-between px-6 py-6 md:px-10">
               <div className="flex items-start justify-between"><Logo /><button onClick={() => setOpen(false)} className="text-[13px] tracking-widest">CLOSE ✕</button></div>
               <ul className="space-y-[1vw]">

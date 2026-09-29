@@ -9,10 +9,16 @@ button,a { -webkit-tap-highlight-color:transparent; }
 .ul { position:relative; }
 .ul::after { content:''; position:absolute; left:0; bottom:-4px; height:1px; width:100%; background:currentColor; transform:scaleX(0); transform-origin:left; transition:transform .45s cubic-bezier(.22,1,.36,1); }
 .ul:hover::after { transform:scaleX(1); }
-.cursor-ring.cursor-large { width:3rem; height:3rem; border-color:rgba(255,255,255,.9); }
+/* Custom cursor (components/CustomCursor.tsx): only active on mouse devices, which get this class from JS. */
+.has-custom-cursor, .has-custom-cursor * { cursor:none!important; }
+.kw-cursor { position:fixed; left:0; top:0; z-index:100; pointer-events:none; opacity:0; mix-blend-mode:difference; transition:opacity .2s; will-change:transform; }
+.kw-cursor.is-visible { opacity:1; }
+.kw-cursor span { display:block; width:8px; height:8px; margin:-4px 0 0 -4px; border-radius:50%; background:#fff; transition:transform .3s cubic-bezier(.22,1,.36,1); }
+.kw-cursor.is-hover span { transform:scale(1.75); }
 @keyframes wave { 0%,100% { transform:scaleY(.25); } 50% { transform:scaleY(1); } }
-@media (pointer:coarse) { .cursor-ring { display:none; } }
 @media (prefers-reduced-motion:reduce) {
   html { scroll-behavior:auto; }
   *,*::before,*::after { animation:none!important; transition-duration:.01ms!important; }
+  /* Pin the route blur-in to its end state (framer writes inline styles, hence !important). */
+  .route-enter { opacity:1!important; filter:none!important; transform:none!important; }
 }

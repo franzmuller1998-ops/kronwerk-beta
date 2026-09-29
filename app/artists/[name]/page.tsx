@@ -14,7 +14,7 @@ export default async function ArtistDetail({params}:{params:Promise<{name:string
   const selected=releases.filter(r=>artist.releases.includes(r.id))
   return (
     <main className="relative min-h-screen overflow-hidden px-6 pb-20 pt-28 md:px-10 md:pt-32">
-      <ColorFlow colors={[artist.color,'#1d4dff','#ff3cc8','#050608']} intensity={.35} speed={.15} interactive className="fixed inset-0 -z-10" />
+      <ColorFlow colors={[artist.color,'#1d4dff','#ff3cc8','#050608']} intensity={.35} speed={.15} className="fixed inset-0 -z-10" />
       <Link href="/artists" className="ul mb-8 inline-block text-xs text-white/60">← BACK</Link>
       <div className="grid gap-10 lg:grid-cols-[.8fr_1.2fr] lg:gap-20">
         <section>
