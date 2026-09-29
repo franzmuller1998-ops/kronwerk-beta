@@ -6,8 +6,8 @@
  * flow avoids the per-context GPU overhead, the browser's ~16-context limit, and gives a single frame loop
  * that can watch the frame rate and step quality down on weak hardware:
  *
- *   tier 2  desktop   60fps, 0.5x resolution, 5 noise octaves
- *   tier 1  4-core    60fps, 0.4x resolution, 4 octaves (also the first step down from tier 2)
+ *   tier 2  desktop   60fps, 0.6x resolution, 5 noise octaves (the original look)
+ *   tier 1  degraded  60fps, 0.45x resolution, 4 octaves
  *   tier 0  mobile    30fps, 0.3x resolution, 3 octaves
  *   off     static CSS gradient (reduced motion, software GL, or still too slow at tier 0)
  */
@@ -18,10 +18,15 @@ precision highp float;
 #else
 precision mediump float;
 #endif
-uniform vec2 R;uniform float T,I;uniform vec3 C[4];
-float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
-float n(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);
-return mix(mix(h(i),h(i+vec2(1,0)),f.x),mix(h(i+vec2(0,1)),h(i+vec2(1,1)),f.x),f.y);}
+uniform vec2 R;uniform float T,I;uniform vec3 C[4];uniform sampler2D N;
+// Grain only: sin-free hash (Dave Hoskins) on wrapped coordinates.
+float h(vec2 p){p=mod(p,97.);vec3 p3=fract(vec3(p.xyx)*.1031);p3+=dot(p3,p3.yzx+33.33);return fract((p3.x+p3.y)*p3.z);}
+// Value noise from a 256x256 random texture: the GPU's bilinear filter interpolates the lattice (after the
+// smoothstep remap), so it is continuous by construction and costs one fetch instead of four hashes.
+// It replaces fract(sin(dot(p,k))*43758.), which amplifies float rounding ~40000x: on Intel/ANGLE the same
+// lattice corner hashed from two neighbouring cells came out different, the noise broke at cell edges and the
+// domain warp turned those breaks into rectangular blocks of shifted flow.
+float n(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return texture2D(N,(mod(i,256.)+f+.5)/256.).r;}
 float fbm(vec2 p){float a=.5,s=0.;for(int i=0;i<${octaves};i++){s+=a*n(p);p=p*2.02+7.3;a*=.5;}return s;}
 vec3 pal(float x){x=fract(x)*4.;vec3 c=mix(C[0],C[1],smoothstep(0.,1.,clamp(x,0.,1.)));
 c=mix(c,C[2],smoothstep(0.,1.,clamp(x-1.,0.,1.)));c=mix(c,C[3],smoothstep(0.,1.,clamp(x-2.,0.,1.)));
@@ -42,8 +47,8 @@ void main(){
 type Tier = { scale: number; budget: number; octaves: number; fps: number }
 const TIERS: Tier[] = [
   { scale: 0.3, budget: 160_000, octaves: 3, fps: 30 },
-  { scale: 0.4, budget: 320_000, octaves: 4, fps: 60 },
-  { scale: 0.5, budget: 520_000, octaves: 5, fps: 60 }, // budget caps huge screens (max canvas pixels)
+  { scale: 0.45, budget: 420_000, octaves: 4, fps: 60 },
+  { scale: 0.6, budget: 760_000, octaves: 5, fps: 60 }, // the original look; budget caps huge screens (max canvas pixels)
 ]
 const OFF_KEY = 'kw-flow-off'
 
@@ -71,10 +76,10 @@ export function flowAllowed() {
 
 function initialTier() {
   const nav = navigator as Navigator & { deviceMemory?: number; connection?: { saveData?: boolean } }
-  // Phones/tablets and very weak or data-saving devices start at the lowest tier; 4-core desktops
-  // (typical integrated-GPU laptops) start one step down. From there the frame-rate monitor decides.
+  // Phones/tablets and very weak or data-saving devices start at the lowest tier; desktops start at full
+  // quality and the frame-rate monitor steps down only if the machine can't hold it.
   if (matchMedia('(pointer: coarse)').matches || (nav.deviceMemory ?? 8) <= 2 || nav.connection?.saveData) return 0
-  return (nav.hardwareConcurrency ?? 8) <= 4 ? 1 : 2
+  return 2
 }
 
 function disable() {
@@ -98,6 +103,14 @@ function init() {
   gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer())
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW)
   gl.enableVertexAttribArray(0); gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0)
+  // Noise lattice for n(): seeded so every visit gets the same pattern. REPEAT wrap makes cell 255 blend into 0.
+  const noise = new Uint8Array(256 * 256)
+  for (let i = 0, s = 1; i < noise.length; i++) { s = (s * 1664525 + 1013904223) >>> 0; noise[i] = s >>> 24 }
+  gl.bindTexture(gl.TEXTURE_2D, gl.createTexture())
+  gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1)
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.LUMINANCE, 256, 256, 0, gl.LUMINANCE, gl.UNSIGNED_BYTE, noise)
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR)
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT)
   tier = initialTier()
   document.addEventListener('visibilitychange', kick)
   return !!program(TIERS[tier].octaves)
