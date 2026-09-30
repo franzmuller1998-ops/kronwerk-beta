@@ -82,9 +82,11 @@ function initialTier() {
   return 2
 }
 
-function disable() {
+/** persist: remember for the rest of the visit. Only for hard failures (no/lost WebGL, shader won't link);
+ *  a frame-rate based switch-off applies to this page load only, so one bad moment can't stick for the session. */
+function disable(persist = true) {
   disabled = true
-  try { sessionStorage.setItem(OFF_KEY, '1') } catch {} // don't retry on every page of this visit
+  if (persist) try { sessionStorage.setItem(OFF_KEY, '1') } catch {}
   cancelAnimationFrame(raf); raf = 0
   for (const e of [...entries]) e.onDisable()
   entries.clear()
@@ -112,6 +114,7 @@ function init() {
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR)
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT)
   tier = initialTier()
+  graceUntil = performance.now() + 2500 // page load and hydration are not representative
   document.addEventListener('visibilitychange', kick)
   return !!program(TIERS[tier].octaves)
 }
@@ -138,16 +141,21 @@ function size(e: Entry) {
   if (e.canvas.width !== w || e.canvas.height !== h) { e.canvas.width = w; e.canvas.height = h; e.last = 0 }
 }
 
-// Adaptive quality: judge by the median rAF interval over ~1.5s so single hitches (hydration, route swap) don't count.
+// Adaptive quality: judge by the median rAF interval over ~1.5s windows. A GPU that can't keep up shows as a
+// steady 25–60ms cadence; single long stalls (dev-server compiles, hydration, a route swap, a throttled or
+// occluded window) are main-thread hitches, not GPU load, so they are ignored and never cost quality.
+let strikes = 0
 function sample(interval: number, now: number) {
-  if (interval > 250 || now < graceUntil) return // throttled/background tab, or settling after a change
+  if (interval > 100 || now < graceUntil) { if (interval > 100) samples = []; return }
   samples.push(interval)
   if (samples.length < 90) return
   const median = samples.sort((a, b) => a - b)[45]
   samples = []
   const tooSlow = tier > 0 ? median > 22 : median > 42 // below ~45fps (desktop tiers) / ~24fps (lowest tier)
-  if (!tooSlow) return
-  if (tier === 0) { disable(); return }
+  strikes = tooSlow ? strikes + 1 : 0
+  if (strikes < (tier === 0 ? 3 : 2)) return // needs consecutive bad windows, not one
+  strikes = 0
+  if (tier === 0) { disable(false); return }
   tier--
   graceUntil = now + 1000
   if (!program(TIERS[tier].octaves)) return
@@ -205,6 +213,7 @@ export function registerFlow(opts: FlowOptions): (() => void) | null {
   entry.io.observe(opts.canvas); entry.ro.observe(opts.canvas)
   size(entry)
   entries.add(entry)
+  graceUntil = Math.max(graceUntil, performance.now() + 1500) // new flows mount on route changes: let it settle
   kick()
   return () => { entry.io.disconnect(); entry.ro.disconnect(); entries.delete(entry) }
 }

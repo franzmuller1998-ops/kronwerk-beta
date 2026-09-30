@@ -6,10 +6,10 @@ import { motion, useAnimationControls } from 'framer-motion'
 import ColorFlow from './ColorFlow'
 
 /**
- * COLOR FLOW route transition (~650ms). Lives in the root layout so it survives the route swap.
+ * COLOR FLOW route transition (~700ms). Lives in the root layout so it survives the route swap.
  *   0–280ms    the current page dims while a band of flow rises from below and covers the screen;
- *              the route is requested immediately, so loading overlaps the cover instead of following it
- *   then       as soon as the cover is closed AND the new route has rendered, the band leaves through
+ *              the route is prefetched immediately, so loading overlaps the cover
+ *   then       the route is swapped under the closed cover; once it has rendered, the band leaves through
  *              the top (380ms) while the new page resolves from blur (app/template.tsx)
  * The band is taller than the viewport with feathered edges, so it never shows a hard wipe line.
  * Skipped entirely with prefers-reduced-motion.
@@ -74,12 +74,18 @@ export default function PageTransition() {
       event.preventDefault()
       busy.current = true
       dim.set({ pointerEvents: 'auto' }) // swallow clicks during the transition
-      pending.current = Promise.all([
+      // Start loading the route right away, but swap pages only once the screen is fully covered: swapping
+      // earlier showed the old page vanishing above the rising band, and let the new page finish its blur-in
+      // hidden under the band instead of as the band leaves.
+      const href = url.pathname + url.search + url.hash
+      router.prefetch(href)
+      const covered = Promise.all([
         band.start({ y: COVERING, transition: COVER }),
         dim.start({ opacity: 0.4, transition: COVER }),
       ])
-      router.push(url.pathname + url.search + url.hash)
-      fallback.current = window.setTimeout(finish, 3000) // never leave the screen covered
+      pending.current = covered
+      covered.then(() => router.push(href))
+      fallback.current = window.setTimeout(finish, 6000) // never leave the screen covered (slow dev compiles)
     }
     document.addEventListener('pointerover', over)
     document.addEventListener('click', click, true)
