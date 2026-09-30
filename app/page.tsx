@@ -19,9 +19,8 @@ export default function Home() {
       </div>
       <div className="absolute inset-x-0 bottom-0 z-10 flex items-end justify-between px-6 pb-8 text-[12px] leading-[1.5] md:px-10 md:pb-9">
         <p>Звук<br/>формирует<br/>будущее</p>
-        <a href="#explore" className="flex items-center gap-4 text-xs">Листайте вниз <span className="h-[64px] w-px bg-white/80 md:h-[72px]" /></a>
+        <p className="text-right text-xs">© KRON Music 2026 <br className="md:hidden" />Все права защищены</p>
       </div>
-      <span id="explore" className="absolute bottom-0" />
     </section>
   )
 }
