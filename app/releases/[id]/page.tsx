@@ -20,7 +20,7 @@ export default async function ReleaseDetail({ params }: { params: Promise<{id:st
   return (
     <main className="relative min-h-screen px-6 pb-20 pt-28 md:px-10 md:pt-32">
       <ColorFlow colors={[...release.colors,'#050608']} intensity={.45} speed={.16} className="fixed inset-0 -z-10" />
-      <Link href="/releases" className="ul mb-8 inline-block text-xs text-white/60">← BACK</Link>
+      <Link href="/releases" className="ul mb-8 inline-block text-xs text-white/60">← НАЗАД</Link>
       <div className="grid gap-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(360px,.9fr)] lg:items-start lg:gap-16">
         <Artwork colors={release.colors} className="aspect-square w-full" />
         <div className="lg:sticky lg:top-28">
@@ -30,8 +30,8 @@ export default async function ReleaseDetail({ params }: { params: Promise<{id:st
           <p className="mb-10 mt-6 max-w-md text-sm leading-relaxed text-white/50">{release.description}</p>
           <AudioPlayer tracks={release.tracks} />
           <div className="mt-10 grid gap-1.5 text-xs text-white/45">
-            <p>Written &amp; produced by {release.artist}</p>
-            <p>Mastered by KRONWERK</p>
+            <p>Автор и продюсер — {release.artist}</p>
+            <p>Мастеринг — KRONWERK</p>
           </div>
         </div>
       </div>

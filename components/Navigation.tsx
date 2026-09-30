@@ -6,7 +6,7 @@ import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import ColorFlow from './ColorFlow'
 import CustomCursor from './CustomCursor'
 
-const links = [['Releases', '/releases', '#2f6bff'], ['Artists', '/artists', '#9b4dff'], ['About', '/about', '#ffffff'], ['Contact', '/contact', '#ff7a1a']] as const
+const links = [['Релизы', '/releases', '#2f6bff'], ['Артисты', '/artists', '#9b4dff'], ['О нас', '/about', '#ffffff'], ['Контакты', '/contact', '#ff7a1a']] as const
 const Logo = () => (
   <Link href="/" className="font-display block leading-[.95]"><b className="text-[15px] font-bold tracking-tight">KRONWERK</b><span className="block text-[15px] font-light tracking-wide">music</span></Link>
 )
@@ -37,17 +37,17 @@ export default function Navigation() {
         <Logo />
         <nav className="flex items-center gap-8 text-[13px]">
           {links.map(([l, h]) => (<Link key={h} href={h} className="ul hidden text-white/80 transition-opacity hover:text-white md:block">{l}</Link>))}
-          <button aria-label="Menu" aria-expanded={open} aria-controls="site-menu" onClick={() => setOpen(true)} className="group flex h-6 w-7 flex-col justify-center gap-[5px]">
+          <button aria-label="Меню" aria-expanded={open} aria-controls="site-menu" onClick={() => setOpen(true)} className="group flex h-6 w-7 flex-col justify-center gap-[5px]">
             {[0, 1, 2].map((i) => <span key={i} className="h-px w-full origin-right bg-white transition-transform group-hover:scale-x-75" />)}
           </button>
         </nav>
       </header>
       <AnimatePresence>
         {open && (
-          <motion.div id="site-menu" role="dialog" aria-modal="true" aria-label="Menu" className="fixed inset-0 z-50 bg-[#050608]" initial={{ clipPath: 'inset(0 0 100% 0)' }} animate={{ clipPath: 'inset(0 0 0% 0)' }} exit={{ clipPath: 'inset(0 0 100% 0)' }} transition={{ duration: reduceMotion ? 0 : 0.5, ease: [0.76, 0, 0.24, 1] }}>
+          <motion.div id="site-menu" role="dialog" aria-modal="true" aria-label="Меню" className="fixed inset-0 z-50 bg-[#050608]" initial={{ clipPath: 'inset(0 0 100% 0)' }} animate={{ clipPath: 'inset(0 0 0% 0)' }} exit={{ clipPath: 'inset(0 0 100% 0)' }} transition={{ duration: reduceMotion ? 0 : 0.5, ease: [0.76, 0, 0.24, 1] }}>
             <ColorFlow palette="hero" colors={hover ? [hover, hover, '#7a3cff', '#00d5ff'] : undefined} className="absolute inset-0 opacity-80" />
             <div className="relative flex h-full flex-col justify-between px-6 py-6 md:px-10">
-              <div className="flex items-start justify-between"><Logo /><button onClick={() => setOpen(false)} className="text-[13px] tracking-widest">CLOSE ✕</button></div>
+              <div className="flex items-start justify-between"><Logo /><button onClick={() => setOpen(false)} className="text-[13px] tracking-widest">ЗАКРЫТЬ ✕</button></div>
               <ul className="space-y-[1vw]">
                 {links.map(([l, h, c], i) => (
                   <li key={h} onMouseEnter={() => setHover(c)} onMouseLeave={() => setHover(null)}>

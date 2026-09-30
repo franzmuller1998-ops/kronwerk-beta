@@ -45,12 +45,12 @@ export default function AudioPlayer({ tracks }: { tracks: Track[] }) {
   return (
     <div className="w-full">
       <div className="flex items-center gap-5">
-        <button onClick={() => play()} aria-label={playing ? `Pause ${track.title}` : `Play ${track.title}`}
+        <button onClick={() => play()} aria-label={playing ? `Пауза: ${track.title}` : `Слушать: ${track.title}`}
           className="group flex h-12 shrink-0 items-center gap-3 rounded-full border border-white/30 pl-4 pr-5 text-xs tracking-[.2em] transition-colors hover:border-white hover:bg-white hover:text-[#050608]">
           {playing
             ? <span className="flex h-3 gap-[3px]"><i className="w-[2px] bg-current" /><i className="w-[2px] bg-current" /></span>
             : <span className="ml-0.5 h-0 w-0 border-y-[6px] border-l-[9px] border-y-transparent border-l-current" />}
-          <span className="w-[3.4em] text-left">{playing ? 'PAUSE' : 'PLAY'}</span>
+          <span className="w-[5.2em] text-left">{playing ? 'ПАУЗА' : 'СЛУШАТЬ'}</span>
         </button>
         <div className="min-w-0 flex-1">
           <div className="mb-2 flex justify-between gap-3 text-xs">

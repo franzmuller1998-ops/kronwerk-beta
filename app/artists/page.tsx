@@ -5,7 +5,7 @@ export default function Artists() {
   return (
     <main className="relative min-h-screen px-6 pb-24 pt-32 md:px-10">
       <ColorFlow palette="artists" intensity={0.5} speed={0.2} className="fixed inset-0 -z-10" />
-      <h1 className="font-display mb-10 w-fit text-[9vw] font-light tracking-tight md:text-[5vw]">ARTISTS</h1>
+      <h1 className="font-display mb-10 w-fit text-[9vw] font-light tracking-tight md:text-[5vw]">АРТИСТЫ</h1>
       <ul className="border-b border-white/15">
         {artists.map((a, i) => (
           <li key={a.name} style={{ ['--c' as string]: a.color }} className="group border-t border-white/15 transition-all duration-500 hover:bg-gradient-to-r hover:from-[color-mix(in_srgb,var(--c)_45%,transparent)] hover:to-transparent">

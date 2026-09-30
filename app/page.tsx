@@ -18,8 +18,8 @@ export default function Home() {
         <p data-cursor="lg" className="font-display -mt-[.15vw] text-[8.8vw] font-extralight leading-none tracking-[.02em]">music</p>
       </div>
       <div className="absolute inset-x-0 bottom-0 z-10 flex items-end justify-between px-6 pb-8 text-[12px] leading-[1.5] md:px-10 md:pb-9">
-        <p>Sound<br/>Shapes<br/>Tomorrow</p>
-        <a href="#explore" className="flex items-center gap-4 text-xs">Scroll down <span className="h-[64px] w-px bg-white/80 md:h-[72px]" /></a>
+        <p>Звук<br/>формирует<br/>будущее</p>
+        <a href="#explore" className="flex items-center gap-4 text-xs">Листайте вниз <span className="h-[64px] w-px bg-white/80 md:h-[72px]" /></a>
       </div>
       <span id="explore" className="absolute bottom-0" />
     </section>
