@@ -5,3 +5,6 @@ out/
 .env*
 npm-debug.log*
 .DS_Store
+
+# Collaboration applications received by /api/apply (personal data, never commit)
+submissions/

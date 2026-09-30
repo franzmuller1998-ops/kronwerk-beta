@@ -6,7 +6,7 @@ import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import ColorFlow from './ColorFlow'
 import CustomCursor from './CustomCursor'
 
-const links = [['Релизы', '/releases', '#2f6bff'], ['Артисты', '/artists', '#9b4dff'], ['О нас', '/about', '#ffffff'], ['Контакты', '/contact', '#ff7a1a']] as const
+const links = [['Релизы', '/releases', '#2f6bff'], ['Артисты', '/artists', '#9b4dff'], ['О нас', '/about', '#ffffff'], ['Контакты', '/contact', '#ff7a1a'], ['Заявка', '/apply', '#ff3cc8']] as const
 const Logo = () => (
   <Link href="/" className="font-display block leading-[.95]"><b className="text-[15px] font-bold tracking-tight">KRONWERK</b><span className="block text-[15px] font-light tracking-wide">music</span></Link>
 )
