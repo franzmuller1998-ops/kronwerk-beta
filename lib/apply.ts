@@ -1,16 +1,6 @@
 // Demo / collaboration application: field options, normalisation and validation shared by the form
 // (components/ApplyForm.tsx) and the API route (app/api/apply/route.ts), so both enforce the same rules.
 
-export const GENRES = [
-  ['techno', 'Техно'],
-  ['house', 'Хаус'],
-  ['ambient', 'Эмбиент'],
-  ['experimental', 'IDM / экспериментальная'],
-  ['dnb', 'Драм-н-бейс'],
-  ['electro', 'Электро'],
-  ['other', 'Другое'],
-] as const
-
 export const SAMPLES = [
   ['no', 'Нет, всё своё'],
   ['cleared', 'Да, с разрешением или из лицензированных библиотек'],
@@ -24,8 +14,6 @@ export type Application = {
   artist: string
   email: string
   links: string[]
-  genre: string
-  genreOther: string
   age: string
   samples: string
   samplesInfo: string
@@ -35,7 +23,7 @@ export type Application = {
 export type Errors = Partial<Record<keyof Application, string>> & { linkItems?: (string | undefined)[] }
 
 export const emptyApplication = (): Application => ({
-  artist: '', email: '', links: [''], genre: '', genreOther: '', age: '', samples: '', samplesInfo: '', consent: false, website: '',
+  artist: '', email: '', links: [''], age: '', samples: '', samplesInfo: '', consent: false, website: '',
 })
 
 const str = (v: unknown, max: number) => (typeof v === 'string' ? v.trim().slice(0, max) : '')
@@ -48,8 +36,6 @@ export function normalize(input: unknown): Application {
     artist: str(o.artist, 80),
     email: str(o.email, 200),
     links: links.length ? links : [''],
-    genre: str(o.genre, 40),
-    genreOther: str(o.genreOther, 80),
     age: str(o.age, 3),
     samples: str(o.samples, 20),
     samplesInfo: str(o.samplesInfo, 1000),
@@ -71,9 +57,6 @@ export function validate(a: Application): Errors {
   const linkItems = a.links.map((l) => (l && !isUrl(l) ? 'Ссылка должна начинаться с https://' : undefined))
   if (linkItems.some(Boolean)) e.linkItems = linkItems
   if (!filled.length) e.links = 'Добавьте хотя бы одну ссылку на трек'
-
-  if (!GENRES.some(([v]) => v === a.genre)) e.genre = 'Выберите жанр'
-  else if (a.genre === 'other' && !a.genreOther) e.genreOther = 'Напишите, какой жанр'
 
   const age = Number(a.age)
   if (!a.age || !Number.isInteger(age)) e.age = 'Укажите возраст числом'

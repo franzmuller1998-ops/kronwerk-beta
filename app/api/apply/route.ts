@@ -17,7 +17,7 @@ export async function POST(req: Request) {
   const receivedAt = new Date().toISOString()
   const id = `${receivedAt.replace(/[:.]/g, '-')}-${Math.random().toString(36).slice(2, 8)}`
   const { website: _honeypot, ...fields } = a
-  const record = { id, receivedAt, ...fields, links: fields.links.filter(Boolean), genreOther: fields.genre === 'other' ? fields.genreOther : '', samplesInfo: fields.samples === 'no' ? '' : fields.samplesInfo }
+  const record = { id, receivedAt, ...fields, links: fields.links.filter(Boolean), samplesInfo: fields.samples === 'no' ? '' : fields.samplesInfo }
 
   const dir = path.join(process.cwd(), 'submissions')
   await mkdir(dir, { recursive: true })

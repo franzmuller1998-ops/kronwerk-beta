@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useRef, useState } from 'react'
-import { emptyApplication, GENRES, hasErrors, MAX_LINKS, MIN_AGE, SAMPLES, validate, type Application, type Errors } from '@/lib/apply'
+import { emptyApplication, hasErrors, MAX_LINKS, MIN_AGE, SAMPLES, validate, type Application, type Errors } from '@/lib/apply'
 
 const label = 'mb-2 block text-[11px] uppercase tracking-[.2em] text-white/50'
 const input = 'w-full border-b border-white/25 bg-transparent py-3 text-lg outline-none transition-colors placeholder:text-white/25 focus:border-white aria-[invalid=true]:border-[#ff8a8a]'
@@ -62,7 +62,7 @@ export default function ApplyForm() {
       <div className="grid gap-10 md:grid-cols-2">
         <div>
           <label htmlFor="artist" className={label}>Имя или псевдоним</label>
-          <input id="artist" className={input} value={a.artist} onChange={(e) => set('artist', e.target.value)} autoComplete="nickname" placeholder="VANTA" aria-invalid={!!errors.artist || undefined} aria-describedby="artist-err" />
+          <input id="artist" className={input} value={a.artist} onChange={(e) => set('artist', e.target.value)} autoComplete="nickname" placeholder="Chief Keef" aria-invalid={!!errors.artist || undefined} aria-describedby="artist-err" />
           <Err id="artist-err" msg={errors.artist} />
         </div>
         <div>
@@ -92,20 +92,6 @@ export default function ApplyForm() {
       </fieldset>
 
       <div className="grid gap-10 md:grid-cols-2">
-        <div>
-          <label htmlFor="genre" className={label}>Жанр</label>
-          <select id="genre" className={`${input} cursor-pointer appearance-none`} value={a.genre} onChange={(e) => set('genre', e.target.value)} aria-invalid={!!errors.genre || undefined} aria-describedby="genre-err">
-            <option value="" disabled className="bg-[#050608]">Выберите жанр</option>
-            {GENRES.map(([v, t]) => <option key={v} value={v} className="bg-[#050608]">{t}</option>)}
-          </select>
-          <Err id="genre-err" msg={errors.genre} />
-          {a.genre === 'other' && (
-            <div className="mt-4">
-              <input aria-label="Какой жанр" className={input} value={a.genreOther} onChange={(e) => set('genreOther', e.target.value)} placeholder="Например, брейкбит" aria-invalid={!!errors.genreOther || undefined} aria-describedby="genre-other-err" />
-              <Err id="genre-other-err" msg={errors.genreOther} />
-            </div>
-          )}
-        </div>
         <div>
           <label htmlFor="age" className={label}>Возраст</label>
           <input id="age" type="number" inputMode="numeric" min={MIN_AGE} max={100} className={`${input} [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none`} value={a.age} onChange={(e) => set('age', e.target.value)} placeholder="25" aria-invalid={!!errors.age || undefined} aria-describedby="age-err" />
