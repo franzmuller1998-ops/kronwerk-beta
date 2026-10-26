@@ -41,7 +41,16 @@ export default function About() {
       <div className="mt-[78vw] grid max-w-4xl gap-10 text-sm leading-relaxed md:mt-16 md:grid-cols-2 md:gap-0">
         {roles.map(([title, href, cta, text], i) => (
           <div key={title} className={i ? 'md:border-l md:border-white/25 md:pl-10' : 'md:pr-10'}>
-            <p className="mb-3 text-[13px] uppercase tracking-[.2em] text-white">{title}</p>
+            <div className="relative mb-3 w-fit text-[13px] uppercase tracking-[.2em] text-white">
+              {/* Phones: a pill behind the whole word playing the same COLOR FLOW as the top of the page. The flow's
+                  pattern scales with its canvas height, so the pill is a window onto a screen-sized canvas (same
+                  filaments as the top) rather than a 30px canvas that would blow the pattern up into soft blobs.
+                  No dark centre, so the colour reaches the middle of the word. */}
+              <div aria-hidden className="absolute -inset-x-3 -inset-y-1.5 overflow-hidden rounded-full md:hidden">
+                <ColorFlow palette="about" intensity={0.9} speed={0.22} vignette={0.05} className="absolute left-0 top-1/2 h-[55svh] w-[100vw] -translate-y-1/2" />
+              </div>
+              <span className="relative [text-shadow:0_1px_6px_rgba(5,6,8,.6)]">{title}</span>
+            </div>
             <p className="text-white/70">{text}</p>
             <Link href={href} className="ul mt-5 inline-block text-[12px] uppercase tracking-[.2em]">{cta} →</Link>
           </div>
