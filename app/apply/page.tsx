@@ -11,7 +11,7 @@ export default function Apply() {
       <div className="grid gap-12 lg:grid-cols-[minmax(0,.8fr)_minmax(0,1.2fr)] lg:gap-20">
         <div className="lg:sticky lg:top-32 lg:self-start">
           <h1 className="font-display mb-6 w-fit text-[11vw] font-light leading-none tracking-tight md:text-[5vw]">ЗАЯВКА</h1>
-          <p className="max-w-sm text-sm leading-relaxed text-white/60">Хотите выпускаться на KRONWERK? Расскажите о себе и пришлите треки.</p>
+          <p className="max-w-sm text-sm leading-relaxed text-white/60">Хотите выступить на площадке KRONWERK?<br />Расскажите о себе и пришлите треки.</p>
         </div>
         <ApplyForm />
       </div>

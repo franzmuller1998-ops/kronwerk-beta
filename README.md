@@ -17,6 +17,7 @@ npm start
 Routes:
 - /
 - /apply
+- /events
 - /about
 - /contact
 

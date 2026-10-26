@@ -7,7 +7,7 @@ import ColorFlow from './ColorFlow'
 import CustomCursor from './CustomCursor'
 
 // The application tab comes first and is highlighted (4th field): a pill in the header, always coloured in the menu.
-const links = [['Заявка', '/apply', '#ff3cc8', true], ['О нас', '/about', '#ffffff', false], ['Контакты', '/contact', '#ff7a1a', false]] as const
+const links = [['Заявка', '/apply', '#ff3cc8', true], ['События', '/events', '#00d5ff', false], ['О нас', '/about', '#ffffff', false], ['Контакты', '/contact', '#ff7a1a', false]] as const
 const Logo = () => (
   <Link href="/" className="font-display block leading-[.95]"><b className="text-[15px] font-bold tracking-tight">KRONWERK</b><span className="block text-[15px] font-light tracking-wide">music</span></Link>
 )

@@ -15,7 +15,7 @@
 
 const TOKEN = 'ВСТАВЬТЕ_СЮДА_APPLY_SHEET_TOKEN'
 const SHEET_NAME = 'Заявки'
-const HEADERS = ['Дата', 'Имя / псевдоним', 'Email', 'Ссылки на треки', 'Возраст', 'Чужие семплы', 'Какие семплы и откуда', 'ID']
+const HEADERS = ['Дата', 'Имя / псевдоним', 'Email / Telegram', 'Ссылки на треки', 'Возраст', 'Чужие семплы', 'Какие семплы и откуда', 'ID']
 
 function doPost(e) {
   const lock = LockService.getScriptLock()

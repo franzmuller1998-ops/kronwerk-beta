@@ -66,8 +66,8 @@ export default function ApplyForm() {
           <Err id="artist-err" msg={errors.artist} />
         </div>
         <div>
-          <label htmlFor="email" className={label}>Email для ответа</label>
-          <input id="email" type="email" inputMode="email" className={input} value={a.email} onChange={(e) => set('email', e.target.value)} autoComplete="email" placeholder="you@mail.ru" aria-invalid={!!errors.email || undefined} aria-describedby="email-err" />
+          <label htmlFor="email" className={label}>Email / Telegram для ответа</label>
+          <input id="email" type="text" inputMode="email" className={input} value={a.email} onChange={(e) => set('email', e.target.value)} autoComplete="email" autoCapitalize="none" spellCheck={false} placeholder="you@mail.ru или @username" aria-invalid={!!errors.email || undefined} aria-describedby="email-err" />
           <Err id="email-err" msg={errors.email} />
         </div>
       </div>

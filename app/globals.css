@@ -21,8 +21,10 @@ button,a { -webkit-tap-highlight-color:transparent; }
    animation work in fractions; with reduced motion the animation is removed and the stroke rests fully drawn. */
 .kw-underline { position:relative; }
 .kw-underline svg { position:absolute; left:1%; width:98%; top:100%; transform:translateY(-49%); overflow:visible; pointer-events:none; }
-.kw-underline path { stroke:#f5f3ef; stroke-width:5.5; stroke-linecap:round; stroke-linejoin:miter; stroke-miterlimit:8; stroke-dasharray:1; stroke-dashoffset:0;
+.kw-underline path, .kw-line path { stroke:#f5f3ef; stroke-width:5.5; stroke-linecap:round; stroke-linejoin:miter; stroke-miterlimit:8; stroke-dasharray:1; stroke-dashoffset:0;
   animation:kw-underline-write 1.3s cubic-bezier(.55,0,.25,1) .5s both; }
+/* The same stroke beside the /events title (app/events/page.tsx). */
+.kw-line { overflow:visible; }
 @keyframes kw-underline-write { from { stroke-dashoffset:1; } to { stroke-dashoffset:0; } }
 @media (prefers-reduced-motion:reduce) {
   html { scroll-behavior:auto; }

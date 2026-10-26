@@ -12,7 +12,7 @@ export const MIN_AGE = 14
 
 export type Application = {
   artist: string
-  email: string
+  email: string // email or Telegram (@username / t.me link); the field keeps its name for the Sheets script
   links: string[]
   age: string
   samples: string
@@ -51,7 +51,7 @@ const isUrl = (s: string) => {
 export function validate(a: Application): Errors {
   const e: Errors = {}
   if (!a.artist) e.artist = 'Укажите имя или псевдоним'
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(a.email)) e.email = 'Укажите email, на который мы ответим'
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(a.email) && !/^(@|(https?:\/\/)?t\.me\/)[a-z0-9_]{5,32}$/i.test(a.email)) e.email = 'Укажите email или Telegram (@username), куда мы ответим'
 
   const filled = a.links.filter(Boolean)
   const linkItems = a.links.map((l) => (l && !isUrl(l) ? 'Ссылка должна начинаться с https://' : undefined))

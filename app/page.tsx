@@ -16,9 +16,10 @@ export default function Home() {
           </svg>
         </h1>
         <p data-cursor="lg" className="font-display -mt-[.15vw] text-[8.8vw] font-extralight leading-none tracking-[.02em]">music</p>
+        <p className="mt-6 text-sm leading-relaxed text-white/50 md:mt-8 md:text-base">Площадка для новых имён.</p>
       </div>
       <div className="absolute inset-x-0 bottom-0 z-10 flex items-end justify-between px-6 pb-8 text-[12px] leading-[1.5] md:px-10 md:pb-9">
-        <p>Звук<br/>формирует<br/>будущее</p>
+        <p>Организация<br/>концертов<br/>и букинг артистов</p>
         <p className="text-right text-xs">© KRON Music 2026 <br className="md:hidden" />Все права защищены</p>
       </div>
     </section>
