@@ -7,8 +7,8 @@ export const metadata: Metadata = { title: 'О нас · KRONWERK music', descri
 
 const g = (...c: string[]) => ({ backgroundImage: `linear-gradient(90deg,${c.join(',')})`, WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' } as const)
 const roles = [
-  ['Исполнителям', '/apply', 'Подать заявку', 'Подайте заявку и пришлите треки. Мы послушаем, подберём дату, площадку и состав вечера, а дальше возьмём на себя организацию: звук, свет, афишу и продвижение.'],
-  ['Гостям', '/events', 'Смотреть события', 'Выберите концерт и запишитесь на сайте — номер брони придёт на почту. Оплата на входе, остальное просто музыка.'],
+  ['Исполнителям', '/apply', 'Подать заявку', 'Подайте заявку и пришлите треки. Мы послушаем и, если они пройдут отбор, подберём дату, площадку и состав вечера.\n\nОрганизацию и продвижение берём на себя.'],
+  ['Гостям', '/events', 'Смотреть события', 'Выберите концерт и запишитесь на сайте — номер брони придёт на почту. Оплата на входе.'],
 ] as const
 
 export default function About() {
@@ -51,7 +51,7 @@ export default function About() {
               </div>
               <span className="relative [text-shadow:0_1px_6px_rgba(5,6,8,.6)]">{title}</span>
             </div>
-            <p className="text-white/70">{text}</p>
+            <p className="whitespace-pre-line text-white/70">{text}</p>
             <Link href={href} className="ul mt-5 inline-block text-[12px] uppercase tracking-[.2em]">{cta} →</Link>
           </div>
         ))}
