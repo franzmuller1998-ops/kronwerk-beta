@@ -130,7 +130,7 @@ export default function ApplyForm() {
         <button type="submit" disabled={status === 'sending'} className="rounded-full border border-white/40 px-8 py-4 text-xs tracking-[.2em] transition-colors hover:border-white hover:bg-white hover:text-[#050608] disabled:opacity-50">
           {status === 'sending' ? 'ОТПРАВЛЯЕМ…' : 'ОТПРАВИТЬ ЗАЯВКУ'}
         </button>
-        {status === 'failed' && <p role="alert" className="text-xs text-[#ff9a9a]">Не получилось отправить. Попробуйте ещё раз или напишите на hello@kronwerk.music.</p>}
+        {status === 'failed' && <p role="alert" className="text-xs text-[#ff9a9a]">Не получилось отправить. Попробуйте ещё раз или напишите на kronwerkmusic@gmail.com.</p>}
       </div>
     </form>
   )

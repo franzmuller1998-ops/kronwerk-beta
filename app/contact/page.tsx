@@ -8,7 +8,7 @@ export default function Contact() {
         <span style={{ backgroundImage: 'linear-gradient(90deg,#2f6bff,#9b4dff,#ff3cc8,#ff7a1a)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>будущее.</span>
       </h1>
       <div className="space-y-6 text-sm md:mb-4">
-        <a href="mailto:hello@kronwerk.music" className="ul block">hello@kronwerk.music</a>
+        <div><p className="mb-1 text-[11px] uppercase tracking-[.2em] text-white/50">Для сотрудничества</p><a href="mailto:kronwerkmusic@gmail.com" className="ul">kronwerkmusic@gmail.com</a></div>
         <ul className="space-y-2 text-white/70">{['Instagram', 'SoundCloud', 'Bandcamp', 'Spotify'].map((s) => <li key={s}><a href="#" className="ul transition-colors hover:text-white">{s}</a></li>)}</ul>
       </div>
     </main>

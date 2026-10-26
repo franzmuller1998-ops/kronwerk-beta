@@ -16,10 +16,7 @@ npm start
 
 Routes:
 - /
-- /releases
-- /releases/kw001
-- /artists
-- /artists/vanta
+- /apply
 - /about
 - /contact
 

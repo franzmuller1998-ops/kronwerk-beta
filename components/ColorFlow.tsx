@@ -4,8 +4,6 @@ import { registerFlow } from '@/lib/flowRenderer'
 
 export const PALETTES = {
   hero: ['#1d4dff', '#8a3cff', '#ff3cc8', '#ff8a1f'],
-  releases: ['#1d4dff', '#7a3cff', '#1d4dff', '#00d5ff'],
-  artists: ['#7a3cff', '#1d4dff', '#5a3cff', '#1d4dff'],
   about: ['#1d4dff', '#00d5ff', '#ff8a1f', '#7a3cff'],
   contact: ['#7a3cff', '#ff3cc8', '#ff8a1f', '#1d4dff'],
 }

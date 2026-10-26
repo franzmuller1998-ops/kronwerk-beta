@@ -4,7 +4,7 @@ import Navigation from '@/components/Navigation'
 import PageTransition from '@/components/PageTransition'
 import './globals.css'
 
-export const metadata: Metadata = { title: 'KRONWERK music', description: 'Независимый лейбл электронной музыки.' }
+export const metadata: Metadata = { title: 'KRONWERK music', description: 'Площадка для концертов независимых исполнителей.' }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

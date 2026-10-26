@@ -7,7 +7,7 @@ import ColorFlow from './ColorFlow'
 import CustomCursor from './CustomCursor'
 
 // The application tab comes first and is highlighted (4th field): a pill in the header, always coloured in the menu.
-const links = [['Заявка', '/apply', '#ff3cc8', true], ['Релизы', '/releases', '#2f6bff', false], ['Артисты', '/artists', '#9b4dff', false], ['О нас', '/about', '#ffffff', false], ['Контакты', '/contact', '#ff7a1a', false]] as const
+const links = [['Заявка', '/apply', '#ff3cc8', true], ['О нас', '/about', '#ffffff', false], ['Контакты', '/contact', '#ff7a1a', false]] as const
 const Logo = () => (
   <Link href="/" className="font-display block leading-[.95]"><b className="text-[15px] font-bold tracking-tight">KRONWERK</b><span className="block text-[15px] font-light tracking-wide">music</span></Link>
 )
@@ -60,7 +60,7 @@ export default function Navigation() {
                   </li>
                 ))}
               </ul>
-              <a href="mailto:hello@kronwerk.music" className="ul self-start text-xs text-white/50">hello@kronwerk.music</a>
+              <a href="mailto:kronwerkmusic@gmail.com" className="ul self-start text-xs text-white/50">kronwerkmusic@gmail.com</a>
             </div>
           </motion.div>
         )}
