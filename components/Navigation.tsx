@@ -60,7 +60,7 @@ export default function Navigation() {
                   </li>
                 ))}
               </ul>
-              <a href="mailto:kronwerkmusic@gmail.com" className="ul self-start text-xs text-white/50">kronwerkmusic@gmail.com</a>
+              <a href="mailto:kronwerk.music.spb@gmail.com" className="ul self-start text-xs text-white/50">kronwerk.music.spb@gmail.com</a>
             </div>
           </motion.div>
         )}

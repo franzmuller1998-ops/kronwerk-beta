@@ -18,6 +18,7 @@ Routes:
 - /
 - /apply
 - /events
+- /events/bar-x-krasnodar
 - /about
 - /contact
 
