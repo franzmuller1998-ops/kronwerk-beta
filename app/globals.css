@@ -25,6 +25,9 @@ button,a { -webkit-tap-highlight-color:transparent; }
   animation:kw-underline-write 1.3s cubic-bezier(.55,0,.25,1) .5s both; }
 /* The same stroke beside the /events title (app/events/page.tsx). */
 .kw-line { overflow:visible; }
+/* Slow fade-in after a pause (the home page's events button on phones). */
+.kw-late-in { animation:kw-late-in 1.4s ease-out 2s both; }
+@keyframes kw-late-in { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
 @keyframes kw-underline-write { from { stroke-dashoffset:1; } to { stroke-dashoffset:0; } }
 @media (prefers-reduced-motion:reduce) {
   html { scroll-behavior:auto; }
