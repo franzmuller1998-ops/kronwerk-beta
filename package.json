@@ -1,6 +1,7 @@
 {
   "name": "kronwerk-music",
   "private": true,
+  "engines": { "node": ">=20" },
   "version": "1.0.0",
   "scripts": {
     "dev": "next dev",
