@@ -8,6 +8,8 @@ type Ym = (id: number, method: string, ...args: unknown[]) => void
 
 /**
  * Yandex Metrika counter (the official snippet, loaded after the page is interactive).
+ * Webvisor is off: it records every DOM mutation, and the route transition, menu and custom cursor rewrite
+ * inline styles every frame, so recording them made those animations stutter on desktop.
  * Links between pages are client-side route changes, not page loads, so each new pathname is
  * reported as a hit; the first load is counted by `init` itself.
  */
@@ -29,7 +31,7 @@ export default function YandexMetrika() {
           for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
           k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
         })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=${METRIKA_ID}', 'ym');
-        ym(${METRIKA_ID}, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+        ym(${METRIKA_ID}, 'init', {ssr:true, webvisor:false, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
       `}</Script>
       <noscript><div><img src={`https://mc.yandex.ru/watch/${METRIKA_ID}`} style={{ position: 'absolute', left: '-9999px' }} alt="" /></div></noscript>
     </>
