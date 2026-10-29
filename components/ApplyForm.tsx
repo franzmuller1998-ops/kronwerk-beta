@@ -48,8 +48,9 @@ export default function ApplyForm() {
   }
 
   const age = Number(a.age)
+  // ym-disable-keys on the form: Metrika Webvisor does not record what people type into it.
   return (
-    <form ref={form} onSubmit={submit} noValidate className="grid gap-10">
+    <form ref={form} onSubmit={submit} noValidate className="ym-disable-keys grid gap-10">
       <div className="grid gap-10 md:grid-cols-2">
         <div>
           <label htmlFor="artist" className={label}>Имя или псевдоним</label>
