@@ -12,6 +12,7 @@ export type Artist = {
   genre: string;
   photo?: string;
   audio?: string;
+  badge?: { src: string; alt: string };
 };
 
 export type Announcement = {
@@ -41,6 +42,7 @@ export const announcement: Announcement = {
       genre: "Prod. by",
       photo: "/artists/artist-2.webp",
       audio: "/audio/artist-2.mp3",
+      badge: { src: '/badges/yandex-1500000.webp', alt: '1 500 000 прослушиваний на Яндекс Музыке' },
     },
     {
       id: "artist-3",

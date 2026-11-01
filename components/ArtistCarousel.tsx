@@ -75,7 +75,7 @@ export default function ArtistCarousel({ title, date, place, href, artists }: An
   const arrow = 'h-11 w-11 rounded-full border border-white/40 text-lg transition-colors hover:border-white hover:bg-white hover:text-[#050608] disabled:pointer-events-none disabled:opacity-30'
 
   return (
-    <section aria-labelledby="announce-title" className="relative z-10 py-20 md:py-28">
+    <section id="announce" aria-labelledby="announce-title" className="relative z-10 py-20 md:py-28">
       <div className="relative z-10">
         <div className="flex items-end justify-between gap-6 px-6 md:px-10">
           <div>
@@ -93,13 +93,13 @@ export default function ArtistCarousel({ title, date, place, href, artists }: An
         <div role="region" aria-roledescription="карусель" aria-label="Артисты выступления" className="mt-10 md:mt-14">
           <ul
             ref={list}
-            className="flex snap-x snap-mandatory gap-4 overflow-x-auto px-6 pb-2 scroll-px-6 [scrollbar-width:none] md:gap-5 md:px-10 md:scroll-px-10 [&::-webkit-scrollbar]:hidden"
+            className="flex snap-x snap-mandatory gap-4 overflow-x-auto px-6 pb-2 pt-8 scroll-px-6 [scrollbar-width:none] md:gap-5 md:px-10 md:scroll-px-10 [&::-webkit-scrollbar]:hidden"
           >
             {artists.map((art, i) => {
               const on = activeId === art.id && playing
               const mine = activeId === art.id
               return (
-                <li key={art.id} className="group w-[72vw] max-w-[320px] shrink-0 snap-start md:w-[320px]">
+                <li key={art.id} className="group relative w-[72vw] max-w-[320px] shrink-0 snap-start md:w-[320px]">
                   <div className="relative aspect-[4/5] overflow-hidden rounded-2xl border-4 border-white/40 transition-colors duration-500 group-hover:border-white/80 group-focus-within:border-white/80" style={tint(i)}>
                     {art.photo && (
                       // Обычный <img>: в standalone-образе не нужен sharp. Фото заранее готовим нужного размера (см. data/announcement.ts).
@@ -134,6 +134,19 @@ export default function ArtistCarousel({ title, date, place, href, artists }: An
                       </>
                     )}
                   </div>
+                  {art.badge && (
+                    // Плашка достижения: половиной над верхним краем карточки, правее края на 8 px. Лежит поверх фото.
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={art.badge.src}
+                      alt={art.badge.alt}
+                      width={640}
+                      height={153}
+                      loading="lazy"
+                      draggable={false}
+                      className="pointer-events-none absolute -right-2 top-0 w-[68%] -translate-y-1/2 drop-shadow-[0_6px_16px_rgba(0,0,0,.45)]"
+                    />
+                  )}
                   <h3 data-cursor="lg" className="font-display mt-4 text-2xl tracking-tight">{art.name}</h3>
                   <p className="mt-1 text-sm text-white/75">{art.genre}</p>
                 </li>

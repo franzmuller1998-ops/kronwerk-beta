@@ -9,3 +9,5 @@ npm-debug.log*
 # Collaboration applications received by /api/apply (personal data, never commit)
 submissions/
 !.env.example
+
+.vercel
