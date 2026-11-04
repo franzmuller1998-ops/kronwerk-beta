@@ -1,0 +1,37 @@
+@import "tailwindcss";
+
+/* Geist is bundled locally via the `geist` package (next/font/local): no network request at dev or build time. */
+:root { color-scheme: dark; --font-body: var(--font-geist-sans), Arial, Helvetica, sans-serif; --font-display: var(--font-geist-sans), Arial, Helvetica, sans-serif; }
+html { background:#050608; color:#f5f3ef; scroll-behavior:smooth; }
+body { font-family:var(--font-body),system-ui,sans-serif; overflow-x:hidden; -webkit-font-smoothing:antialiased; }
+.font-display { font-family:var(--font-display),sans-serif; font-feature-settings:"kern" 1; }
+button,a { -webkit-tap-highlight-color:transparent; }
+.ul { position:relative; }
+.ul::after { content:''; position:absolute; left:0; bottom:-4px; height:1px; width:100%; background:currentColor; transform:scaleX(0); transform-origin:left; transition:transform .45s cubic-bezier(.22,1,.36,1); }
+.ul:hover::after { transform:scaleX(1); }
+/* Custom cursor (components/CustomCursor.tsx): only active on mouse devices, which get this class from JS. */
+.has-custom-cursor, .has-custom-cursor * { cursor:none!important; }
+.kw-cursor { position:fixed; left:0; top:0; z-index:100; pointer-events:none; opacity:0; mix-blend-mode:difference; transition:opacity .2s; will-change:transform; }
+.kw-cursor.is-visible { opacity:1; }
+.kw-cursor span { display:block; width:14px; height:14px; margin:-7px 0 0 -7px; border-radius:50%; background:#fff; transition:transform .3s cubic-bezier(.22,1,.36,1); }
+.kw-cursor.is-hover span { transform:scale(1.6); }
+.kw-cursor.is-big span { transform:scale(5); transition-duration:.45s; }
+/* Hand-drawn white underline with a curl under the home title (SVG in app/page.tsx). It scales with the title,
+   and is written left to right like a pen stroke once the page has resolved. pathLength=1 lets the dash
+   animation work in fractions; with reduced motion the animation is removed and the stroke rests fully drawn. */
+.kw-underline { position:relative; }
+.kw-underline svg { position:absolute; left:1%; width:98%; top:100%; transform:translateY(-49%); overflow:visible; pointer-events:none; }
+.kw-underline path, .kw-line path { stroke:#f5f3ef; stroke-width:5.5; stroke-linecap:round; stroke-linejoin:miter; stroke-miterlimit:8; stroke-dasharray:1; stroke-dashoffset:0;
+  animation:kw-underline-write 1.3s cubic-bezier(.55,0,.25,1) .5s both; }
+/* The same stroke beside the /events title (app/events/page.tsx). */
+.kw-line { overflow:visible; }
+/* Slow fade-in after a pause (the home page's events button on phones). */
+.kw-late-in { animation:kw-late-in 1.4s ease-out 2s both; }
+@keyframes kw-late-in { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
+@keyframes kw-underline-write { from { stroke-dashoffset:1; } to { stroke-dashoffset:0; } }
+@media (prefers-reduced-motion:reduce) {
+  html { scroll-behavior:auto; }
+  *,*::before,*::after { animation:none!important; transition-duration:.01ms!important; }
+  /* Pin the route blur-in to its end state (framer writes inline styles, hence !important). */
+  .route-enter { opacity:1!important; filter:none!important; transform:none!important; }
+}

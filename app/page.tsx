@@ -1,4 +1,4 @@
-import ScrollLink from '@/components/ScrollLink'
+import ScrollCue from '@/components/ScrollCue'
 import ColorFlow from '@/components/ColorFlow'
 import ArtistCarousel from '@/components/ArtistCarousel'
 import { announcement } from '@/data/announcement'
@@ -26,8 +26,8 @@ export default function Home() {
           </h1>
           <p data-cursor="lg" className="font-display -mt-[.15vw] text-[8.8vw] font-extralight md:text-[6vw] leading-none tracking-[.02em]">music</p>
           <p className="mt-6 text-sm leading-relaxed text-white/50 md:mt-8 md:text-base">Площадка для новых имён.</p>
-          {/* Phones only: fades in 2s after the page opens (.kw-late-in in globals.css). */}
-          <ScrollLink to="announce" className="kw-late-in mt-8 rounded-full border border-white/70 px-7 py-2.5 text-sm transition-colors hover:border-white hover:bg-white hover:text-[#050608] md:hidden">Ближайшие мероприятия</ScrollLink>
+          {/* Scroll cue to the announcement; fades in 2s after the page opens (.kw-late-in in globals.css). */}
+          <ScrollCue />
         </div>
         <div className="absolute inset-x-0 bottom-0 z-10 flex items-end justify-between px-6 pb-8 text-[12px] leading-[1.5] md:px-10 md:pb-9">
           <p>Организация<br/>концертов<br/>и букинг артистов</p>
