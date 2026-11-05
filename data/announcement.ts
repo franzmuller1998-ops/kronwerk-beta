@@ -25,8 +25,8 @@ export type Announcement = {
 
 export const announcement: Announcement = {
   title: "Краснодар / Бар X",
-  date: "25 ноября, 17:00",
-  place: "Название площадки, Краснодар",
+  date: "5 декабря, 20:00",
+  place: "[Место площадки уточняется]",
   href: "/events",
   artists: [
     {
